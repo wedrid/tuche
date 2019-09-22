@@ -25,6 +25,9 @@ class _GraficoAccelerometroState extends State<GraficoAccelerometro> {
  
   void notify(double amplitude){
     setState(() {
+      if(traceX.length > 310){
+        traceX.clear();
+      }
       traceX.add(amplitude);
     });
   }
