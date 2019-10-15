@@ -10,11 +10,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Tuche',
-      theme: ThemeData(primarySwatch: Colors.brown),
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey
+      ),
       //home: MyHomePage(title: 'Tuche - trova buche'),
       home: LoginPage(),
     );
   }
 }
-
-

@@ -11,32 +11,46 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var appBar = AppBar(
+          title: Text(title),
+        );
     //print(this.token);
     return WillPopScope(
       onWillPop: () async => false,
-          child: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
+      child: Scaffold(
+        appBar: appBar,
         body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                //padding: EdgeInsets.all(10),
-                height: 500,
-                //color: Colors.blueAccent,
-                child: Column(
-                  children: <Widget>[
-                    NavigationButton(title: 'Vai al monitoring', onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MonitoringPage(),),);
-                    },),
-                    NavigationButton(title: 'Vai alla mappa', onPressed: null,),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        
+          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            
+              //padding: EdgeInsets.all(10),
+              //height: 500,
+              
+                  NavigationButton(
+                    appBarHeight: appBar.preferredSize.height,
+                    statusBarHeight: MediaQuery.of(context).padding.top,
+                    title: 'Vai al monitoring',
+                    path: "assets/images/buche.jpg",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MonitoringPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  NavigationButton(
+                    statusBarHeight: MediaQuery.of(context).padding.top,
+                    path: "assets/images/map.png",
+                    appBarHeight: appBar.preferredSize.height,
+                    title: 'Vai alla mappa',
+                    onPressed: () {},
+                  ),
+          ],
+        ),
       ),
     );
   }
