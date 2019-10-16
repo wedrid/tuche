@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:tuche/pages/mappa.dart';
 import 'package:tuche/pages/monitoring_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatelessWidget{
   @override
@@ -29,16 +29,15 @@ class Menu extends StatelessWidget{
                     },
           ),
           ListTile(
-            title: Text('Map'),
-            onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Mappa(),
-                        ),
-                      );
-                      //Navigator.pop(context);
-                    },
+            title: Text('Vai alla mappa'),
+            onTap: () async {
+              const url = 'http://172.105.85.84';
+              if( await canLaunch(url)){
+                await launch(url);
+              } else {
+                throw 'Non è stato possibile andare al sito $url';
+              }
+            },
           ),
         ],
       ),

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:tuche/pages/monitoring_page.dart';
-import '../providers/auth.dart';
+import 'package:tuche/providers/api_access.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,7 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Auth autenticazione = new Auth();
+  APIAccess autenticazione = new APIAccess();
   String username = "";
   String password = "";
   String error = "";
@@ -110,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(
             builder: (context) => MonitoringPage(
+              apiAccess: this.autenticazione,
                   //title: 'TUCHE',
                   //token: autenticazione.token, //TODO: passare il token 
                 ),

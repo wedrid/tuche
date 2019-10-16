@@ -3,8 +3,29 @@ import 'package:location/location.dart';
 
 
 class LocationWidget extends StatefulWidget {
+  final LatLon latLon = LatLon();
   @override
   _LocationWidgetState createState() => _LocationWidgetState();
+
+  getCoordinates(){
+    var map = {
+      'lat': latLon.lat,
+      'lon': latLon.lon,
+    };
+    return map;
+  }
+
+}
+
+class LatLon {
+  var lat = 0.0;
+  var lon = 0.0;
+
+  void setLatLon(String lat, String lon){
+    this.lat = double.parse(lat);
+    this.lon = double.parse(lon);
+  }
+
 }
 
 class _LocationWidgetState extends State<LocationWidget> {
@@ -23,6 +44,7 @@ class _LocationWidgetState extends State<LocationWidget> {
     location.onLocationChanged().listen((value) {
       setState(() {
         currentLocation = value;
+        widget.latLon.setLatLon(currentLocation['latitude'].toString(), currentLocation['longitude'].toString());
       });
     });
   }

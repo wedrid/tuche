@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:tuche/logic/bool_switch.dart';
+import 'package:tuche/providers/api_access.dart';
 import 'package:tuche/widgets/accelerometer.dart';
 import 'package:tuche/widgets/menu.dart';
+import 'package:tuche/widgets/start_stop_button.dart';
 
 import '../widgets/location_widget.dart';
 
 class MonitoringPage extends StatelessWidget{
+  final APIAccess apiAccess;
+  BoolSwitch interruttore = BoolSwitch();
+  final LocationWidget lw = LocationWidget();
+
+  MonitoringPage({this.apiAccess});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +23,10 @@ class MonitoringPage extends StatelessWidget{
       ),
       body: Column(
         children: <Widget>[
-          Accelerometer(),
-          LocationWidget(),
+          Accelerometer(interruttore: interruttore, apiAccess: apiAccess, locationWidget: lw),
+          lw,
           //Card(child: Text('QUI CI SARANNO I DATI DEL GPS, LAT E LON'), color: Colors.orange),
-          RaisedButton(child: Text('Avvia'), onPressed: null,),
+          StartStopButton(interruttore: interruttore,),
         ],
       ),
     );

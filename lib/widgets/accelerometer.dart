@@ -2,15 +2,26 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
+import 'package:tuche/logic/bool_switch.dart';
+import 'package:tuche/providers/api_access.dart';
+import 'package:tuche/widgets/location_widget.dart';
 
 import './grafico_accelerometro.dart';
 
-class Accelerometer extends StatefulWidget{
-  @override 
+class Accelerometer extends StatefulWidget {
+  final BoolSwitch interruttore;
+  final APIAccess apiAccess;
+  final LocationWidget locationWidget;
+
+  Accelerometer({this.interruttore, this.apiAccess, this.locationWidget});
+
+  @override
   _AccelerometerState createState() => _AccelerometerState();
 }
 
 class _AccelerometerState extends State<Accelerometer> {
+  var last = DateTime.now();
+  var diff;
   var xData = 0.0;
   var yData = 0.0;
   var zData = 0.0;
@@ -23,13 +34,12 @@ class _AccelerometerState extends State<Accelerometer> {
   GraficoAccelerometro grafz = GraficoAccelerometro();
   static DateTime lastUpdated = DateTime.now();
 
- // Card signal = ;
+  // Card signal = ;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     accelerometerEvents.listen((AccelerometerEvent event) {
-      
       setState(() {
         xData = event.x;
         grafx.notify(xData);
@@ -37,25 +47,31 @@ class _AccelerometerState extends State<Accelerometer> {
         grafy.notify(yData);
         zData = event.z;
         grafz.notify(zData);
-        accelerationModule = sqrt(pow(xData, 2) + pow(yData, 2) + pow(zData, 2));
-        if(accelerationModule > maxAcceleration){
+        accelerationModule =
+            sqrt(pow(xData, 2) + pow(yData, 2) + pow(zData, 2));
+        if (accelerationModule > maxAcceleration) {
           maxAcceleration = accelerationModule;
-          print(maxAcceleration);
+          //print(maxAcceleration);
         }
-
-        if(accelerationModule > accelerationThreshold){
+        diff = (last.difference(DateTime.now()).inSeconds).abs();
+        if (accelerationModule > accelerationThreshold &&
+            widget.interruttore.isTrue() && diff > 5) { //diff > 5 SECONDI
           print(accelerationModule);
+          widget.apiAccess.inviaDati(
+            widget.locationWidget.getCoordinates()['lat'],
+            widget.locationWidget.getCoordinates()['lon'],
+            xData,
+            yData,
+            zData,
+          );
           lastUpdated = DateTime.now();
         }
-
-        //TODO volendo si può fare il grafico del modulo delle accelerazioni
       });
     });
   }
 
-  @override 
-  Widget build(BuildContext context){
-
+  @override
+  Widget build(BuildContext context) {
     return Card(
       color: Colors.lightBlue,
       child: Column(
@@ -64,9 +80,12 @@ class _AccelerometerState extends State<Accelerometer> {
           Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Accelerazioni  [m/s\u00B2]', style: TextStyle(fontWeight: FontWeight.bold),),
+              child: Text(
+                'Accelerazioni  [m/s\u00B2]',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),          
+          ),
           //TODO probably refactor the following three cards, make a different class w/ pointer to sensor data
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +109,6 @@ class _AccelerometerState extends State<Accelerometer> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text('Z:' + zData.toStringAsFixed(5)),
                 ),
-                //margin: EdgeInsets.all(7),
               ),
             ],
           ),
@@ -102,15 +120,14 @@ class _AccelerometerState extends State<Accelerometer> {
           ),
           Card(
             child: Container(
-              padding: const EdgeInsets.all(9.0),
-              constraints: BoxConstraints(
-                minWidth: 30,
-                minHeight: 40,
-              ),
-              child: Text("Last updated: " + lastUpdated.toString(), )
-            ),
-            //color: Colors.green,
-            
+                padding: const EdgeInsets.all(9.0),
+                constraints: BoxConstraints(
+                  minWidth: 30,
+                  minHeight: 40,
+                ),
+                child: Text(
+                  "Last updated: " + lastUpdated.toString(),
+                )),
           ),
           Column(
             children: <Widget>[
@@ -128,6 +145,4 @@ class _AccelerometerState extends State<Accelerometer> {
       ),
     );
   }
-
-
 }
