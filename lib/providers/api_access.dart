@@ -40,7 +40,7 @@ class APIAccess with ChangeNotifier {
   }
 
   //TODO aggiungere modulo dei vettori
-  Future<void> inviaDati(var lat, var lon, var ix, var iy, var iz) async {
+  Future<void> inviaDati(var lat, var lon, var ix, var iy, var iz, var im) async {
     final response = await http.post(
       'http://172.105.85.84/api/map/create',
       headers: {
@@ -53,6 +53,7 @@ class APIAccess with ChangeNotifier {
         'intensity_x': ix,
         'intensity_y': iy,
         'intensity_z': iz,
+        'intensity_module': im,
       }),
     );
   }

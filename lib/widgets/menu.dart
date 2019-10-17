@@ -26,7 +26,7 @@ class Menu extends StatelessWidget{
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MonitoringPage(),
+                          builder: (context) => MonitoringPage(apiAccess: this.apiAccess,),
                         ),
                       );
                       //Navigator.pop(context);

@@ -25,9 +25,14 @@ class _AccelerometerState extends State<Accelerometer> {
   var xData = 0.0;
   var yData = 0.0;
   var zData = 0.0;
+  var localMax = 0.0;
   var accelerationModule = 0.0; //VARIABILE DISCUTIBILMENTE PIÙ IMPORTANTE DI TUTTE, rappresenta il modulo di tutte le accelerazioni
   var maxAcceleration = 0.0;
   final accelerationThreshold = 23;
+  var startTime;
+
+  var maxx = 0.0, maxy = 0.0, maxz = 0.0, maxm = 0.0;
+  var maxLat, maxLon;
 
   GraficoAccelerometro grafx = GraficoAccelerometro();
   GraficoAccelerometro grafy = GraficoAccelerometro();
@@ -53,18 +58,47 @@ class _AccelerometerState extends State<Accelerometer> {
           maxAcceleration = accelerationModule;
           //print(maxAcceleration);
         }
-        diff = (last.difference(DateTime.now()).inSeconds).abs();
+
+        //TODO IMPLEMENTARE LA LOGICA CHE PERMETTE DI CALCOLARE IL MAX IN UN INTERVALLO TEMPORALE
+
+        if(startTime != null){
+          diff = (startTime.difference(DateTime.now()).inSeconds).abs();
+        }
         if (accelerationModule > accelerationThreshold &&
-            widget.interruttore.isTrue() && diff > 5) { //diff > 5 SECONDI
-          print(accelerationModule);
-          widget.apiAccess.inviaDati(
-            widget.locationWidget.getCoordinates()['lat'],
-            widget.locationWidget.getCoordinates()['lon'],
-            xData,
-            yData,
-            zData,
-          );
+            widget.interruttore.isTrue()) { //diff > 3 SECONDI
+            if(startTime == null){
+              startTime = DateTime.now();
+            }
+            if(diff >= 3){
+              widget.apiAccess.inviaDati(
+              maxLat,
+              maxLon,
+              maxx,
+              maxy,
+              maxz,
+              localMax
+            );
+            maxLat = null;
+            maxLon = null;
+            maxx = null;
+            maxy = null;
+            maxz = null;
+            localMax = 0;
+            startTime = null;
           lastUpdated = DateTime.now();
+          } else { //altrimenti cerca il massimo
+          if(accelerationModule > localMax){
+            this.maxm = xData;
+            this.maxy = yData;
+            this.maxz = zData;
+            this.localMax = accelerationModule;
+            this.maxLat = widget.locationWidget.getCoordinates()['lat'];
+            this.maxLon = widget.locationWidget.getCoordinates()['lon'];
+            }
+          }
+          
+          print(accelerationModule);
+          
         }
       });
     });
