@@ -9,7 +9,7 @@ import '../widgets/location_widget.dart';
 
 class MonitoringPage extends StatelessWidget{
   final APIAccess apiAccess;
-  BoolSwitch interruttore = BoolSwitch();
+  final BoolSwitch interruttore = BoolSwitch();
   final LocationWidget lw = LocationWidget();
 
   MonitoringPage({this.apiAccess});
@@ -17,7 +17,7 @@ class MonitoringPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Menu(),
+      drawer: Menu(apiAccess),
       appBar: AppBar(
         title: Text('Monitor'),
       ),

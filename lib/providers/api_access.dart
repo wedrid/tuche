@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tuche/logic/report_lite.dart';
 
 class APIAccess with ChangeNotifier {
   String token;
@@ -30,7 +31,7 @@ class APIAccess with ChangeNotifier {
     }
 
     token = json.decode(response.body)['token'];
-
+    //getReports();
     //print("TOKEN: " +  _token);
   }
 
@@ -54,5 +55,29 @@ class APIAccess with ChangeNotifier {
         'intensity_z': iz,
       }),
     );
+  }
+
+  Future<List<ReportLite>> getReports() async {
+    var data = await http.get(
+      "http://172.105.85.84/api/map/get_data",
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Token ' + this.token,
+      },
+    );
+    var jsonData = json.decode(data.body);
+
+    List<ReportLite> reports = [];
+
+    for (var r in jsonData) {
+      ReportLite report = ReportLite(
+          date: r["time"].toString(),
+          lat: r["lat"],
+          lon: r["lon"],
+          intensityModule: r["intensity_module"]);
+      reports.add(report);
+    }
+    print(reports[0].date + reports[0].lat.toString() + reports[0].lon.toString() + reports[0].intensityModule.toString());
+    return reports;
   }
 }

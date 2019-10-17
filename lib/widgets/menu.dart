@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tuche/pages/monitoring_page.dart';
+import 'package:tuche/pages/table_page.dart';
+import 'package:tuche/providers/api_access.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatelessWidget{
+  APIAccess apiAccess;
+  Menu(this.apiAccess);
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -38,6 +42,18 @@ class Menu extends StatelessWidget{
                 throw 'Non è stato possibile andare al sito $url';
               }
             },
+          ),
+          ListTile(
+            title: Text('I tuoi reports'),
+            onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TablePage(this.apiAccess),
+                        ),
+                      );
+                      //Navigator.pop(context);
+                    },
           ),
         ],
       ),
