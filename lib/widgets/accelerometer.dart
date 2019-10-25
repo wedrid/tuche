@@ -20,18 +20,18 @@ class Accelerometer extends StatefulWidget {
 }
 
 class _AccelerometerState extends State<Accelerometer> {
-  var last = DateTime.now();
-  var diff;
+  //var last = DateTime.now();
+  var diff = 0;
   var xData = 0.0;
   var yData = 0.0;
   var zData = 0.0;
-  var localMax = 0.0;
+  var localMax = 0.0; //è il massimo modulo locale
   var accelerationModule = 0.0; //VARIABILE DISCUTIBILMENTE PIÙ IMPORTANTE DI TUTTE, rappresenta il modulo di tutte le accelerazioni
   var maxAcceleration = 0.0;
   final accelerationThreshold = 23;
   var startTime;
 
-  var maxx = 0.0, maxy = 0.0, maxz = 0.0, maxm = 0.0;
+  var maxx = 0.0, maxy = 0.0, maxz = 0.0;
   var maxLat, maxLon;
 
   GraficoAccelerometro grafx = GraficoAccelerometro();
@@ -60,16 +60,18 @@ class _AccelerometerState extends State<Accelerometer> {
         }
 
         //TODO IMPLEMENTARE LA LOGICA CHE PERMETTE DI CALCOLARE IL MAX IN UN INTERVALLO TEMPORALE
-
+        //print(diff.toString());
         if(startTime != null){
           diff = (startTime.difference(DateTime.now()).inSeconds).abs();
         }
+        //print(diff.toString());
         if (accelerationModule > accelerationThreshold &&
-            widget.interruttore.isTrue()) { //diff > 3 SECONDI
+            widget.interruttore.isTrue()) { 
             if(startTime == null){
               startTime = DateTime.now();
             }
-            if(diff >= 3){
+            print(diff.toString());
+            if(diff >= 3){ 
               widget.apiAccess.inviaDati(
               maxLat,
               maxLon,
@@ -77,29 +79,53 @@ class _AccelerometerState extends State<Accelerometer> {
               maxy,
               maxz,
               localMax
-            );
-            maxLat = null;
-            maxLon = null;
-            maxx = null;
-            maxy = null;
-            maxz = null;
-            localMax = 0;
-            startTime = null;
-          lastUpdated = DateTime.now();
-          } else { //altrimenti cerca il massimo
+              );
+              maxLat = null;
+              maxLon = null;
+              maxx = 0;
+              maxy = 0;
+              maxz = 0;
+              localMax = 0;
+              startTime = null;
+              diff = 0;
+            } else { //altrimenti cerca il massimo
           if(accelerationModule > localMax){
-            this.maxm = xData;
+            this.maxx = xData;
             this.maxy = yData;
             this.maxz = zData;
             this.localMax = accelerationModule;
             this.maxLat = widget.locationWidget.getCoordinates()['lat'];
             this.maxLon = widget.locationWidget.getCoordinates()['lon'];
+            lastUpdated = DateTime.now();
+
             }
           }
-          
           print(accelerationModule);
+          print(lastUpdated.toString());
           
         }
+
+        //FIXME: attenzione: è una logica molto fragile.
+        
+        if(diff >= 3){
+              widget.apiAccess.inviaDati(
+              maxLat,
+              maxLon,
+              maxx,
+              maxy,
+              maxz,
+              localMax
+              );
+              maxLat = null;
+              maxLon = null;
+              maxx = 0;
+              maxy = 0;
+              maxz = 0;
+              localMax = 0;
+              startTime = null;
+              diff = 0;
+            }
+            
       });
     });
   }

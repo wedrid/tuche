@@ -35,7 +35,7 @@ class Menu extends StatelessWidget{
           ListTile(
             title: Text('Vai alla mappa'),
             onTap: () async {
-              const url = 'http://172.105.85.84';
+              const url = 'http://172.105.85.84/map/maponly';
               if( await canLaunch(url)){
                 await launch(url);
               } else {
