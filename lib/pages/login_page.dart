@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tuche/pages/monitoring_page.dart';
 import 'package:tuche/providers/api_access.dart';
@@ -17,35 +16,47 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).primaryColorLight,
+      padding: EdgeInsets.only(top: 130),
+      color: Theme.of(context).backgroundColor,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        //mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          SizedBox(
-            height: 200,
-          ),
           Container(
             //height: 400,
             child: Card(
+              color: Theme.of(context).cardColor,
               child: Padding(
                 padding: const EdgeInsets.all(40.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      child: Text(
-                        'TUCHE - login',
-                        style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
+                    Container(
+                      //padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      padding: EdgeInsets.only(bottom: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Image(
+                            height: 80,
+                            image: AssetImage("assets/images/tuche_logo.png"),
+                          ),
+                          Text(
+                            'Tuche',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).primaryColorDark),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
                       ),
                     ),
-                    Text('USERNAME'),
+                    //Text('USERNAME'),
                     TextField(
                       decoration: InputDecoration(
                         hintText: 'Username',
-                        hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 12.0),
+                        hintStyle: TextStyle(
+                            color: Theme.of(context).hintColor, fontSize: 12.0),
                       ),
                       onSubmitted: (String s) => _faiLogin,
                       onChanged: (String str) {
@@ -55,31 +66,43 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 30,
                     ),
-                    Text('PASSWORD'),
+                    //Text('PASSWORD'),
                     TextField(
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: 'Password',
-                        hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 12.0),
+                        hintStyle: TextStyle(
+                            color: Theme.of(context).hintColor, fontSize: 12.0),
                       ),
                       onChanged: (String str) {
                         this.password = str;
                       },
                       onSubmitted: (String s) => _faiLogin,
                     ),
-                    Text(error),
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: Text(error, style: TextStyle(color: Theme.of(context).errorColor),),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          RaisedButton(
-            child: Text('Login'),
-            onPressed: _faiLogin,
-            /*() {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: 'TUCHE',),),); //qui, prova il login, se successful allora vai avanti, altrimenti rimani qua
-                  },*/
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
+            width: 150,
+            height: 45,
+            child: RaisedButton(
+              color: Theme.of(context).primaryColor,
+              child: Text(
+                'Login',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: _faiLogin,
+              /*() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: 'TUCHE',),),); //qui, prova il login, se successful allora vai avanti, altrimenti rimani qua
+                    },*/
+            ),
           ),
         ],
       ),
@@ -92,16 +115,13 @@ class _LoginPageState extends State<LoginPage> {
     if (this.username == "" || this.password == "") {
       setState(() {
         error = "Inserire username e password";
-
       });
       print(error);
-      
     } else {
       await autenticazione.login(username, password);
       if (autenticazione.token == null) {
         setState(() {
           error = "Autenticazione fallita";
-
         });
         print(error);
         return;
@@ -110,15 +130,15 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(
             builder: (context) => MonitoringPage(
-              apiAccess: this.autenticazione,
+                  apiAccess: this.autenticazione,
                   //title: 'TUCHE',
-                  //token: autenticazione.token, //TODO: passare il token 
+                  //token: autenticazione.token,// passare il token
                 ),
           ),
         ); //qui, prova il login, se successful allora vai avanti, altrimenti rimani qua
       }
     }
 
-    //TODO sopra è da passarci il token
+    // sopra è da passarci il token
   }
 }

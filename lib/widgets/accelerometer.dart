@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
 import 'package:tuche/logic/bool_switch.dart';
+import 'package:tuche/logic/transportation_mode.dart';
 import 'package:tuche/providers/api_access.dart';
 import 'package:tuche/widgets/location_widget.dart';
 
@@ -12,8 +13,9 @@ class Accelerometer extends StatefulWidget {
   final BoolSwitch interruttore;
   final APIAccess apiAccess;
   final LocationWidget locationWidget;
+  final TransportationMode transportationMode;
 
-  Accelerometer({this.interruttore, this.apiAccess, this.locationWidget});
+  Accelerometer({this.interruttore, this.apiAccess, this.locationWidget, this.transportationMode});
 
   @override
   _AccelerometerState createState() => _AccelerometerState();
@@ -45,6 +47,7 @@ class _AccelerometerState extends State<Accelerometer> {
   void initState() {
     super.initState();
     accelerometerEvents.listen((AccelerometerEvent event) {
+      
       setState(() {
         xData = event.x;
         grafx.notify(xData);
@@ -59,26 +62,27 @@ class _AccelerometerState extends State<Accelerometer> {
           //print(maxAcceleration);
         }
 
-        //TODO IMPLEMENTARE LA LOGICA CHE PERMETTE DI CALCOLARE IL MAX IN UN INTERVALLO TEMPORALE
         //print(diff.toString());
         if(startTime != null){
           diff = (startTime.difference(DateTime.now()).inSeconds).abs();
         }
         //print(diff.toString());
-        if (accelerationModule > accelerationThreshold &&
+        if (accelerationModule > widget.transportationMode.getThreshold() &&
             widget.interruttore.isTrue()) { 
             if(startTime == null){
               startTime = DateTime.now();
             }
-            print(diff.toString());
+            //print(diff.toString());
             if(diff >= 3){ 
+              print("Mode: " + widget.transportationMode.getMode().toString());
               widget.apiAccess.inviaDati(
               maxLat,
               maxLon,
               maxx,
               maxy,
               maxz,
-              localMax
+              localMax,
+              widget.transportationMode.getMode(),
               );
               maxLat = null;
               maxLon = null;
@@ -100,21 +104,24 @@ class _AccelerometerState extends State<Accelerometer> {
 
             }
           }
-          print(accelerationModule);
-          print(lastUpdated.toString());
+          //print(accelerationModule);
+          //print(lastUpdated.toString());
           
         }
 
         //FIXME: attenzione: è una logica molto fragile.
         
         if(diff >= 3){
+              print("Mode: " + widget.transportationMode.getMode().toString());
+
               widget.apiAccess.inviaDati(
               maxLat,
               maxLon,
               maxx,
               maxy,
               maxz,
-              localMax
+              localMax,
+              widget.transportationMode.getMode(),
               );
               maxLat = null;
               maxLon = null;
@@ -133,7 +140,7 @@ class _AccelerometerState extends State<Accelerometer> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.lightBlue,
+      color: Theme.of(context).accentColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[

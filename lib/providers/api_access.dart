@@ -40,7 +40,7 @@ class APIAccess with ChangeNotifier {
   }
 
   //TODO aggiungere modulo dei vettori
-  Future<void> inviaDati(var lat, var lon, var ix, var iy, var iz, var im) async {
+  Future<void> inviaDati(var lat, var lon, var ix, var iy, var iz, var im, var tipo) async {
     final response = await http.post(
       'http://172.105.85.84/api/map/create',
       headers: {
@@ -54,6 +54,7 @@ class APIAccess with ChangeNotifier {
         'intensity_y': iy,
         'intensity_z': iz,
         'intensity_module': im,
+        'vehicle_type': tipo,
       }),
     );
   }
@@ -75,7 +76,9 @@ class APIAccess with ChangeNotifier {
           date: r["time"].toString(),
           lat: r["lat"],
           lon: r["lon"],
-          intensityModule: r["intensity_module"]);
+          intensityModule: r["intensity_module"],
+          vehicleType: r["vehicle_type"],
+          );
       reports.add(report);
     }
     print(reports[0].date + reports[0].lat.toString() + reports[0].lon.toString() + reports[0].intensityModule.toString());

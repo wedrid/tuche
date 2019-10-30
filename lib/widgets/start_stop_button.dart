@@ -14,26 +14,27 @@ class StartStopButton extends StatefulWidget{
 
 class _StartStopButtonState extends State<StartStopButton> {
 
-  String startStop = "Avvia";
+  String startStop = "Avvia ▶";
   @override
   Widget build(BuildContext context) {
 
     return RaisedButton(
       child: Text(startStop),
       onPressed: abilitaInvioAlServer,
+      color: Theme.of(context).primaryColorLight,
     );
   }
 
   void abilitaInvioAlServer() {
-    if(startStop == "Avvia"){
+    if(startStop == "Avvia ▶"){
       setState(() {
-        startStop = "Interrompi";
+        startStop = "Interrompi ◼";
         widget.interruttore.setTrue();
       });
     }
     else {
       setState(() {
-        startStop = "Avvia";
+        startStop = "Avvia ▶";
         widget.interruttore.setFalse();
       });
     }

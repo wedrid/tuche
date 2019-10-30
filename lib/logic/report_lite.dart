@@ -3,7 +3,8 @@ class ReportLite{
   final lat;
   final lon;
   final intensityModule;
+  final vehicleType;
 
-  ReportLite({this.date, this.lat, this.lon, this.intensityModule});
+  ReportLite({this.date, this.lat, this.lon, this.intensityModule, this.vehicleType});
 
 }
