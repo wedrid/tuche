@@ -1,16 +1,9 @@
 # tuche
 
-A new Flutter project.
+A proof of concept application that allows to detect potholes in the street using the accelerometer and gps of your smartphone. 
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+The project needs to be built, and needs the companion web part to make the REST API work correctly. 
+To see the final result the suggestion is to follow the following link for the slides presenting the project. 
+https://docs.google.com/presentation/d/1gNFHZqKxlYeY-TnE64IZzNXSfsm_Xn3yoX6qgK4z4Xk/edit?usp=sharing 
